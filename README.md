@@ -7,6 +7,6 @@ This repository contains the relevant datasets that I have used to do data clean
 It includes:
           1. Original Datasets = Datasets that were found online.
           2. New Datasets = Data cleaning has been perfomed on these datasets through Pandas.
-          3. Codes = The code that I have used to do data cleaning.
+          3. Codes = The codes that I have used to do data cleaning.
 
 Thank you.
