@@ -1,0 +1,65 @@
+***CALCULATED COLUMNS***
+Table name: WasteGeneration
+DAX: WasteGenerationTotal = WasteGeneration[2017] + WasteGeneration[2018] + WasteGeneration[2019] + WasteGeneration[2020] + WasteGeneration[2021]
+
+Table name: WasteRecycled
+DAX: WasteRecycledTotal = WasteRecycled[2017] +WasteRecycled[2018] + WasteRecycled[2019] +WasteRecycled[2020] + WasteRecycled[2021]
+
+Table name: WasteDisposed
+DAX: WasteDisposedTotal = WasteDisposed[2017] + WasteDisposed[2018] + WasteDisposed[2019] +WasteDisposed[2020] + WasteDisposed[2021]
+
+***CALCULATED MEASURES***
+Table name: WasteRecycled
+DAX: averageRecycled = AVERAGE(WasteRecycled[WasteRecycledTotal])
+
+Table name: WasteDisposal
+DAX: averageDisposal = AVERAGE(WasteDisposed[WasteDisposedTotal])
+
+Table name: WasteOverall
+coeff corr = 
+VAR __muX = CALCULATE(AVERAGE(WasteOverall[Recycling 
+Rate (%)]))
+VAR __muY = CALCULATE(AVERAGE(WasteOverall[Total 
+Recycled ('000 tonnes)]))
+VAR __numerator = SUMX(WasteOverall, 
+(WasteOverall[Recycling Rate (%)] - __muX) *(WasteOverall[Total Recycled ('000 tonnes)] -
+__muY))
+VAR __denominator = SQRT(SUMX(WasteOverall, 
+(WasteOverall[Recycling Rate (%)] - __muX)^2) * 
+SUMX(WasteOverall, (WasteOverall[Total Recycled 
+('000 tonnes)] - __muY)^2))
+RETURN
+DIVIDE(__numerator, __denominator)
+
+Table name: WasteOverall
+coeff correl type = 
+SWITCH(TRUE,
+[coeff corr]=-
+1 ,"Perfect negative 
+correlation",
+[coeff corr]>-1 && [coeff corr]<=-
+0.8 ,"Very strong negative correlation",
+[coeff corr]>-0.8 && [coeff corr]<=-
+0.6 ,"Strong negative correlation",
+[coeff corr]>-0.6 && [coeff corr]<=-
+0.4 ,"Moderate negative correlation",
+[coeff corr]>-0.4 && [coeff corr]<=-
+0.2 ,"Weak negative correlation",
+[coeff corr]>-0.2 && [coeff 
+corr]<0 ,"Very weak negative correlation",
+[coeff 
+corr]=0 ,"No correlation",
+[coeff corr]>0 && [coeff 
+corr]<0.2 ,"Very weak positive correlation",
+[coeff corr]>=0.2 && [coeff 
+corr]<0.4 ,"Weak positive correlation",
+[coeff corr]>=0.4 && [coeff 
+corr]<0.6 ,"Moderate positive correlation",
+[coeff corr]>=0.6 && [coeff 
+corr]<0.8 ,"Strong positive correlation",
+[coeff corr]>=0.8 && [coeff 
+corr]<1 ,"Very strong positive correlation",
+[coeff 
+corr]=1 ,"Perfect positive 
+correlation"
+)
